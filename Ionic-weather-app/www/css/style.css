@@ -1,1 +1,22 @@
 /* Empty. Add your own CSS if you like */
+#mainView{
+	/*background-image: url("https://images.unsplash.com/photo-1430692032771-aae00435a3ff?crop=entropy&fit=crop&fm=jpg&h=850&ixjsv=2.1.0&ixlib=rb-0.3.5&q=80&w=1450");*/
+	text-align: center;
+	
+}
+/* icons */
+
+/*can be clear-day, clear-night, rain, snow, sleet, wind, fog, cloudy, partly-cloudy-day, or partly-cloudy-night*/
+
+.icon-clear-day, .icon-clear-night, .icon-rain, .icon-snow, .icon-sleet, .icon-wind, .icon-fog, .icon-cloudy, .icon-partly-cloudy-day, .icon-partly-cloudy-night {
+	/*background-color: red; */
+	height: 230px;
+	width: 100%;
+	background-position: center center;
+	background-repeat: no-repeat;  
+
+}
+
+.icon-clear-day{
+	background-image: url("http://www.fumcfortworth.org/wp-content/uploads/2015/04/sun.png");
+}
