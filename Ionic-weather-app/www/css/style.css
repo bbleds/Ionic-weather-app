@@ -2,7 +2,12 @@
 #mainView{
 	/*background-image: url("https://images.unsplash.com/photo-1430692032771-aae00435a3ff?crop=entropy&fit=crop&fm=jpg&h=850&ixjsv=2.1.0&ixlib=rb-0.3.5&q=80&w=1450");*/
 	text-align: center;
+	margin-top: 45px;
 	
+}
+
+.left-align{
+	text-align: left;
 }
 /* icons */
 
@@ -19,4 +24,23 @@
 
 .icon-clear-day{
 	background-image: url("http://www.fumcfortworth.org/wp-content/uploads/2015/04/sun.png");
+}
+
+.fiveDayItem{
+	border: 1px solid black;
+}
+
+#five-day-forcast .card{
+	margin: 0px;
+	padding-top: 5px; 
+}
+
+#three-day-forcast-holder{
+	position: absolute;
+	bottom: 0px;
+	width: 100%;
+}
+
+#noMargHeader{
+	margin-top: 0px; 
 }

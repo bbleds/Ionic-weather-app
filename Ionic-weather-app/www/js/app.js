@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic', 'ngCordova', 'angular-skycons'])
+angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -30,29 +30,33 @@ angular.module('starter', ['ionic', 'ngCordova', 'angular-skycons'])
   $stateProvider
 
   // setup an abstract state for the tabs directive
-    .state('root', {
-    url: '/root',
-    templateURL: 'templates/root.html'
-  })
+    .state('main', {
+    url: '/main',
+    templateUrl: 'templates/main.html'        
+    })
 
     // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('root');
+  $urlRouterProvider.otherwise('main');
 
 
 })
 
 //handles request to weather api
-.controller('weatherCtrl', function($scope, $q, $http, $cordovaGeolocation){
-    $scope.temp;
+.controller('weatherCtrl', function( $q, $http, $cordovaGeolocation){ 
+
+
+    var self = this;
+
+    self.color = "blue";
 
            var posOptions = {timeout: 10000, enableHighAccuracy: false};
           $cordovaGeolocation
             .getCurrentPosition(posOptions)
             .then(function (position) {
-                //gets lat and lng
+            //gets lat and lng
               var lat  = position.coords.latitude
               var lng = position.coords.longitude
-                    //query the forcast api by lat and lng         
+              //query the forcast api by lat and lng         
               $q(function(resolve, reject) {
                 //gets current weather data
               $http.get('/api/forecast/deddf761abe49ca199f649859b49fc32/'+lat+','+lng)
@@ -68,20 +72,40 @@ angular.module('starter', ['ionic', 'ngCordova', 'angular-skycons'])
               }).then(function(weather){
                 console.log(" weather ", weather);
 
-                $scope.temp = Math.round(weather.currently.temperature)+"°";
+                //Holds a summary of week Forcast
+                self.longSummary = weather.daily.summary;
 
-                $scope.weatherDesc = weather.currently.summary;
+                //Holds current temperature returned from API
+                self.temp = Math.round(weather.currently.temperature)+"°";
 
-               $scope.CurrentWeather = {
-                  forecast: {
-                      icon: "partly-cloudy-night",
-                      iconSize: 100,
-                      color: "blue"
-                  }
-              };
+                //Holds a description of weather returned from  API
+                self.weatherDesc = weather.currently.summary;
 
-                //set icon by -->
-                // clear-day, clear-night, rain, snow, sleet, wind, fog, cloudy, partly-cloudy-day, or partly-cloudy-night
+                //Holds current weather icon from API
+                self.CurrentWeather = {
+                    forecast: {
+                        icon: weather.currently.icon,
+                        iconSize: 150,
+                        color: self.color
+                    }
+                };
+
+                //Holds what current temp feels like
+                self.feelsLike = "Feels like "+Math.round(weather.currently.apparentTemperature)+"°";
+
+               //Loop through first five days of forcast returned from API and push to self.fiveDayForcast array
+               self.fiveDayForcast = []
+               for(var i = 1; i < 6; i++){
+
+                  //round max temperature to nearest degree
+                  weather.daily.data[i].temperatureMax = Math.round(weather.daily.data[i].temperatureMax);
+
+                  //round min temperature to nearest degree
+                  weather.daily.data[i].temperatureMin = Math.round(weather.daily.data[i].temperatureMin);
+                    self.fiveDayForcast.push(weather.daily.data[i])
+               };
+               console.log("self.fiveDayForcast", self.fiveDayForcast);
+
               });
 
                 }, function(err) {

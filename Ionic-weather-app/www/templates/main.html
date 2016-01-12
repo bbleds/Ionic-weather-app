@@ -1,0 +1,26 @@
+<ion-view>
+<ion-nav-title>Weather</ion-nav-title>
+
+    <div id="mainView" ng-controller="weatherCtrl as weather">
+        <skycon icon="weather.CurrentWeather.forecast.icon" size="weather.CurrentWeather.forecast.iconSize"></skycon>
+        <h1 id="noMargHeader">{{weather.weatherDesc}}</h1>
+        <h1>{{weather.temp}}</h1>
+        <h3>{{weather.feelsLike}}</h3>
+        
+<p>{{weather.longSummary}}</p>
+          <div id="three-day-forcast-holder"> 
+             <div class="item item-divider bar-calm">
+                5 Day Forcast
+             </div>
+            <div id="five-day-forcast" class="row">
+              <div class="col card" ng-repeat="day in weather.fiveDayForcast">                
+                <skycon icon="day.icon" size="50"></skycon>
+                <p>High<br> {{day.temperatureMax}}</p>
+                <p>Low<br> {{day.temperatureMin}}</p>
+              </div>
+            </div>  
+          </div>  
+
+    </div>
+
+</ion-view>
