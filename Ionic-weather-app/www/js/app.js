@@ -49,6 +49,90 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
 
     self.color = "blue";
 
+     //enter zip
+          self.switchZip = function($event, zipInput){
+            if($event.keyCode === 13){
+              
+              //take zip and get lat and lng from google
+                 $q(function(resolve, reject) {
+                  $http.get('http://maps.googleapis.com/maps/api/geocode/json?address='+zipInput+'&country=us')
+                  .success(
+                    function(addressResponse) {
+                      resolve(addressResponse);
+
+                    }, function(error) {
+                      reject(error);
+                    }
+                  );
+
+                  //promise resolves address
+                }).then(function(zipAddress){
+                  console.log("zipAddress", zipAddress.results[0].geometry.location);
+
+                  var newLat = zipAddress.results[0].geometry.location.lat;
+                  var newLng = zipAddress.results[0].geometry.location.lng;
+
+                    $q(function(resolve, reject) {
+                //gets current weather data
+              $http.get('/api/forecast/deddf761abe49ca199f649859b49fc32/'+newLat+','+newLng)
+                .success(
+                  function(weatherResponse) {
+                    resolve(weatherResponse);
+
+                  }, function(error) {
+                    console.log("there was an error");
+                    reject(error);
+                  }
+                );
+              }).then(function(weather){
+                 console.log(" weather ", weather);
+
+                //Holds a summary of week Forcast
+                self.longSummary = weather.daily.summary;
+
+                //Holds current temperature returned from API
+                self.temp = Math.round(weather.currently.temperature)+"°";
+
+                //Holds a description of weather returned from  API
+                self.weatherDesc = weather.currently.summary;
+
+                //Holds current weather icon from API
+                self.CurrentWeather = {
+                    forecast: {
+                        icon: weather.currently.icon,
+                        iconSize: 150,
+                        color: self.color
+                    }
+                };
+
+                //Holds what current temp feels like
+                self.feelsLike = "Feels like "+Math.round(weather.currently.apparentTemperature)+"°";
+
+               //Loop through first five days of forcast returned from API and push to self.fiveDayForcast array
+               self.fiveDayForcast = []
+               for(var i = 1; i < 6; i++){
+
+                  //round max temperature to nearest degree
+                  weather.daily.data[i].temperatureMax = Math.round(weather.daily.data[i].temperatureMax);
+
+                  //round min temperature to nearest degree
+                  weather.daily.data[i].temperatureMin = Math.round(weather.daily.data[i].temperatureMin);
+                    self.fiveDayForcast.push(weather.daily.data[i])
+               };
+               console.log("self.fiveDayForcast", self.fiveDayForcast);
+
+
+
+
+              })
+
+
+
+                });
+            }
+
+          }
+
            var posOptions = {timeout: 10000, enableHighAccuracy: false};
           $cordovaGeolocation
             .getCurrentPosition(posOptions)
@@ -112,9 +196,6 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                   console.log("there was an error");
                   // error
                 });
-
-
-                //enter zip
 
 
 });

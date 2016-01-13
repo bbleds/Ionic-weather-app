@@ -1,7 +1,13 @@
 <ion-view>
-<ion-nav-title>Weather</ion-nav-title>
+<ion-nav-title>
+  Weather
+</ion-nav-title>
+
 
     <div id="mainView" ng-controller="weatherCtrl as weather">
+    <label class="item item-input">
+          <input type="text" ng-model="zipInput" ng-keypress="weather.switchZip($event, zipInput)" placeholder="Zip Code">
+        </label>
         <skycon icon="weather.CurrentWeather.forecast.icon" size="weather.CurrentWeather.forecast.iconSize"></skycon>
         <h1 id="noMargHeader">{{weather.weatherDesc}}</h1>
         <h1>{{weather.temp}}</h1>
