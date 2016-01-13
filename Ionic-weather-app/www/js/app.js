@@ -78,6 +78,10 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
 
                   //outputtodom
                   self.searchOutput = searchHistory;
+
+                  // set forcast output array
+                  var forecastArray = weather.forecast.simpleforecast.forecastday;
+                  self.fiveDayForcast = forecastArray;
                   
                 
 
@@ -89,7 +93,7 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                //query the weather underground api by lat and lng to get auto ip first, then html 5 location 
               getWeather('http://api.wunderground.com/api/2f0c8e826c308010/conditions/forecast/geolookup/q/autoip.json');
 
-    //******** HTML 5 CALL **********//
+      //******** HTML 5 CALL **********//
                $q(function(resolve, reject) {
                         //gets current weather data
                          navigator.geolocation.getCurrentPosition(function(data){                           
@@ -108,6 +112,7 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                         self.gotGeo = true;
                       });
 
+        //******** Search by zip **********//
                 self.searchForZip = function($event, newZip){
 
                   if($event.keyCode === 13 && self.gotGeo === true){
