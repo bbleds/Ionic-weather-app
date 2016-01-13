@@ -11,6 +11,10 @@
         <skycon icon="weather.CurrentWeather.forecast.icon" size="weather.CurrentWeather.forecast.iconSize"></skycon>
         <h1 id="noMargHeader">{{weather.cityName}}</h1>
         <h1 id="noMargHeader">{{weather.feels}}°</h1>
+        <p>Search History</p>
+        <p ng-repeat="(key,value) in weather.searchOutput">
+          {{key}}
+        </p>
         
 <p>{{weather.longSummary}}</p>
           <div id="three-day-forcast-holder"> 

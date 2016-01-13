@@ -49,102 +49,6 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
 
     self.color = "blue";
 
-     //make api call for auto ip, then location 
-              //query the weather underground api by lat and lng to get auto ip first, then html 5 location 
-              $q(function(resolve, reject) {
-                //gets current weather data
-              $http.get('http://api.wunderground.com/api/2f0c8e826c308010/conditions/forecast/geolookup/q/autoip.json')
-                .success(
-                  function(weatherResponse) {
-                    resolve(weatherResponse);
-
-                  }, function(error) {
-                    console.log("there was an error");
-                    reject(error);
-                  }
-                );
-              }).then(function(weather){
-                  //get lat and long
-                  console.log("weather ", weather.location.lat);
-                  console.log("weather ", weather.location.lon);
-                  console.log("first weather", weather);
-                  self.cityName = weather.location.city;
-                  console.log("self.cityName ", self.cityName);
-
-                  self.feels = Math.round(weather.current_observation.temp_f);
-
-                  //personal weather station id
-                  self.station = weather.current_observation.station_id;
-
-                  console.log("station ", self.station);
-
-              }).then(function(){
-                console.log("stuffy ", self.station);
-                // var stationObject = { "station" : self.station}
-                // localStorage.setItem("searchHistory", JSON.stringify(stationObject));
-                // "stationSearches":[
-                //       {"firstName":"John", "lastName":"Doe"}
-                //   ]
-
-                // for(var key in localStorage){
-                //   return key;
-                // }
-
-                //get stationHistory or set if not exist
-                console.log("station history ", localStorage.stationHistory);
-                if(localStorage.stationHistory !== undefined){
-                      
-                      //parse the stations in history
-                      var parsedStationArray = JSON.parse(localStorage.stationHistory);
-
-                      //if current station if not in array 
-                      if(parsedStationArray.indexOf(self.station) === -1){
-
-                            //push new item
-                            parsedStationArray.push(self.station);
-
-                            //stringify the new array
-                            var alteredArray = JSON.stringify(parsedStationArray);
-
-                            //set the new array in local storage
-                            localStorage.stationHistory = alteredArray;
-                        
-                      } else {
-                        console.log("already there");
-                      }
-
-
-
-                } else {
-                  //create local storage
-                  localStorage.setItem("stationHistory", "[]");
-
-                  
-                      //parse the stations in history
-                      var parsedStationArray = JSON.parse(localStorage.stationHistory);
-
-                      //if current station if not in array 
-                      if(parsedStationArray.indexOf(self.station) === -1){
-
-                            //push new item
-                            parsedStationArray.push(self.station);
-
-                            //stringify the new array
-                            var alteredArray = JSON.stringify(parsedStationArray);
-
-                            //set the new array in local storage
-                            localStorage.stationHistory = alteredArray;
-                        
-                      } else {
-                        console.log("already there");
-                      }
-
-
-
-                }
-
-              });
-
         //******** AUTO IP CALL **********//
                //query the weather underground api by lat and lng to get auto ip first, then html 5 location 
               $q(function(resolve, reject) {
@@ -166,37 +70,29 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                   console.log("weather", weather);
 
                   self.feels = Math.round(weather.current_observation.temp_f);
-                  self.cityName = weather.location.city;
+                  self.cityName = weather.location.city +", "+ weather.location.state;
 
                   //personal weather station id
                   self.station = weather.current_observation.station_id;
-                   if(localStorage.stationHistory !== undefined){
-                      
-                      //parse the stations in history
-                      var parsedStationArray = JSON.parse(localStorage.stationHistory);
 
-                      //if current station if not in array 
-                      if(parsedStationArray.indexOf(self.station) === -1){
+                  //get search history
+                  var searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || {};
 
-                            //push new item
-                            parsedStationArray.push(self.station);
+                  //set key
+                  searchHistory[self.cityName] = self.station;
 
-                            //stringify the new array
-                            var alteredArray = JSON.stringify(parsedStationArray);
+                  //add to local storage
+                  localStorage.searchHistory = JSON.stringify(searchHistory);
 
-                            //set the new array in local storage
-                            localStorage.stationHistory = alteredArray;
-                        
-                      } else {
-                        console.log("already there");
-                      }
+
+                  //outputtodom
+                  self.searchOutput = searchHistory;
 
 
 
-                } else {
-                  //create local storage
-                  localStorage.setItem("stationHistory", "[]")
-                }
+
+
+                  
 
               });
 
@@ -236,7 +132,7 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                               console.log("weather", weather);
 
                               self.feels = Math.round(weather.current_observation.temp_f);
-                              self.cityName = weather.location.city;
+                              self.cityName = weather.location.city +", "+ weather.location.state;
 
                               self.gotGeo = true;
 
@@ -248,34 +144,20 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                               console.log("far ", forecastArray[0].high.fahrenheit);
 
                                //personal weather station id
-                  self.station = weather.current_observation.station_id;
-                   if(localStorage.stationHistory !== undefined){
-                      
-                      //parse the stations in history
-                      var parsedStationArray = JSON.parse(localStorage.stationHistory);
+                            self.station = weather.current_observation.station_id;
 
-                      //if current station if not in array 
-                      if(parsedStationArray.indexOf(self.station) === -1){
+                             self.cityName = weather.location.city +", "+ weather.location.state;
 
-                            //push new item
-                            parsedStationArray.push(self.station);
+                              //get search history
+                              var searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || {};
 
-                            //stringify the new array
-                            var alteredArray = JSON.stringify(parsedStationArray);
+                              //set key
+                              searchHistory[self.cityName] = self.station;
 
-                            //set the new array in local storage
-                            localStorage.stationHistory = alteredArray;
-                        
-                      } else {
-                        console.log("already there");
-                      }
-
-
-
-                } else {
-                  //create local storage
-                  localStorage.setItem("stationHistory", "[]")
-                }
+                              //add to local storage
+                              localStorage.searchHistory = JSON.stringify(searchHistory);
+                   //outputtodom
+                  self.searchOutput = searchHistory;
 
 
 
@@ -308,40 +190,27 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                               console.log("weather", weather);
 
                               self.feels = Math.round(weather.current_observation.temp_f);
-                              self.cityName = weather.location.city;
+                              self.cityName = weather.location.city +", "+ weather.location.state;
                                var stationObject = { "station" : self.station}
                                console.log("stationObject", stationObject);
 
                                 //personal weather station id
                   self.station = weather.current_observation.station_id;
-                   if(localStorage.stationHistory !== undefined){
-                      
-                      //parse the stations in history
-                      var parsedStationArray = JSON.parse(localStorage.stationHistory);
 
-                      //if current station if not in array 
-                      if(parsedStationArray.indexOf(self.station) === -1){
+                   self.cityName = weather.location.city +", "+ weather.location.state;
 
-                            //push new item
-                            parsedStationArray.push(self.station);
+                              //get search history
+                              var searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || {};
 
-                            //stringify the new array
-                            var alteredArray = JSON.stringify(parsedStationArray);
+                              //set key
+                              searchHistory[self.cityName] = self.station;
 
-                            //set the new array in local storage
-                            localStorage.stationHistory = alteredArray;
-                        
-                      } else {
-                        console.log("already there");
-                      }
-
-
-
-                } else {
-                  //create local storage
-                  localStorage.setItem("stationHistory", "[]")
-                }
-
+                              //add to local storage
+                              localStorage.searchHistory = JSON.stringify(searchHistory);
+                  
+                  
+                   //outputtodom
+                  self.searchOutput = searchHistory;
 
                           });
                   }
