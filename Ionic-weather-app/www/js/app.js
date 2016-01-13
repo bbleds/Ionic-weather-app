@@ -49,11 +49,11 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
 
     self.color = "blue";
 
-        //******** AUTO IP CALL **********//
-               //query the weather underground api by lat and lng to get auto ip first, then html 5 location 
-              $q(function(resolve, reject) {
+    //main function
+    function getWeather(url){
+       $q(function(resolve, reject) {
                 //gets current weather data
-              $http.get('http://api.wunderground.com/api/2f0c8e826c308010/conditions/forecast/geolookup/q/autoip.json')
+              $http.get(url)
                 .success(
                   function(weatherResponse) {
                     resolve(weatherResponse);
@@ -65,36 +65,29 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                 );
               }).then(function(weather){
                   //get lat and long
-                  console.log("weather ", weather.location.lat);
-                  console.log("weather ", weather.location.lon);
-                  console.log("weather", weather);
-
                   self.feels = Math.round(weather.current_observation.temp_f);
                   self.cityName = weather.location.city +", "+ weather.location.state;
-
                   //personal weather station id
                   self.station = weather.current_observation.station_id;
-
                   //get search history
                   var searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || {};
-
                   //set key
                   searchHistory[self.cityName] = self.station;
-
                   //add to local storage
                   localStorage.searchHistory = JSON.stringify(searchHistory);
 
-
                   //outputtodom
                   self.searchOutput = searchHistory;
-
-
-
-
-
                   
+                
 
               });
+
+    }
+
+        //******** AUTO IP CALL **********//
+               //query the weather underground api by lat and lng to get auto ip first, then html 5 location 
+              getWeather('http://api.wunderground.com/api/2f0c8e826c308010/conditions/forecast/geolookup/q/autoip.json');
 
     //******** HTML 5 CALL **********//
                $q(function(resolve, reject) {
@@ -111,108 +104,16 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                         var lng = data.coords.longitude;
                         console.log("latitude ", lat);
                         console.log("longitude", lng);
-
-                        //search underground by zip
-                        $q(function(resolve, reject) {
-                            //gets current weather data
-                          $http.get('http://api.wunderground.com/api/2f0c8e826c308010/geolookup/conditions/forecast/q/'+lat+','+lng+'.json')
-                            .success(
-                              function(weatherResponse) {
-                                resolve(weatherResponse);
-
-                              }, function(error) {
-                                console.log("there was an error");
-                                reject(error);
-                              }
-                            );
-                          }).then(function(weather){
-                              //get lat and long
-                              console.log("weather ", weather.location.lat);
-                              console.log("weather ", weather.location.lon);
-                              console.log("weather", weather);
-
-                              self.feels = Math.round(weather.current_observation.temp_f);
-                              self.cityName = weather.location.city +", "+ weather.location.state;
-
-                              self.gotGeo = true;
-
-                              var forcast = weather.forcast;
-                              var forecastArray = weather.forecast.simpleforecast.forecastday;
-
-                              console.log("forecastArray ", forecastArray);
-                              self.fiveDayForcast = forecastArray;
-                              console.log("far ", forecastArray[0].high.fahrenheit);
-
-                               //personal weather station id
-                            self.station = weather.current_observation.station_id;
-
-                             self.cityName = weather.location.city +", "+ weather.location.state;
-
-                              //get search history
-                              var searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || {};
-
-                              //set key
-                              searchHistory[self.cityName] = self.station;
-
-                              //add to local storage
-                              localStorage.searchHistory = JSON.stringify(searchHistory);
-                   //outputtodom
-                  self.searchOutput = searchHistory;
-
-
-
-                          });
-
+                        getWeather('http://api.wunderground.com/api/2f0c8e826c308010/geolookup/conditions/forecast/q/'+lat+','+lng+'.json');
+                        self.gotGeo = true;
                       });
 
                 self.searchForZip = function($event, newZip){
 
                   if($event.keyCode === 13 && self.gotGeo === true){
                       console.log("newZip ", newZip);
+                       getWeather('http://api.wunderground.com/api/2f0c8e826c308010/geolookup/conditions/forecast/q/'+newZip+'.json');
             
-
-                     $q(function(resolve, reject) {
-                            //gets current weather data
-                          $http.get('http://api.wunderground.com/api/2f0c8e826c308010/geolookup/conditions/forecast/q/'+newZip+'.json')
-                            .success(
-                              function(weatherResponse) {
-                                resolve(weatherResponse);
-
-                              }, function(error) {
-                                console.log("there was an error");
-                                reject(error);
-                              }
-                            );
-                          }).then(function(weather){
-                              //get lat and long
-                              console.log("weather ", weather.location.lat);
-                              console.log("weather ", weather.location.lon);
-                              console.log("weather", weather);
-
-                              self.feels = Math.round(weather.current_observation.temp_f);
-                              self.cityName = weather.location.city +", "+ weather.location.state;
-                               var stationObject = { "station" : self.station}
-                               console.log("stationObject", stationObject);
-
-                                //personal weather station id
-                  self.station = weather.current_observation.station_id;
-
-                   self.cityName = weather.location.city +", "+ weather.location.state;
-
-                              //get search history
-                              var searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || {};
-
-                              //set key
-                              searchHistory[self.cityName] = self.station;
-
-                              //add to local storage
-                              localStorage.searchHistory = JSON.stringify(searchHistory);
-                  
-                  
-                   //outputtodom
-                  self.searchOutput = searchHistory;
-
-                          });
                   }
                       
                 }
