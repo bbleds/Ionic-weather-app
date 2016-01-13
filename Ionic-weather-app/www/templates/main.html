@@ -9,7 +9,8 @@
 
     <div id="mainView">
         <skycon icon="weather.CurrentWeather.forecast.icon" size="weather.CurrentWeather.forecast.iconSize"></skycon>
-        <h1 id="noMargHeader">Feels like: {{weather.feels}}</h1>
+        <h1 id="noMargHeader">{{weather.cityName}}</h1>
+        <h1 id="noMargHeader">{{weather.feels}}°</h1>
         
 <p>{{weather.longSummary}}</p>
           <div id="three-day-forcast-holder"> 
@@ -19,7 +20,7 @@
             <div id="five-day-forcast" class="row">
               <div class="col card" ng-repeat="day in weather.fiveDayForcast">                
                 <skycon icon="day.icon" size="50"></skycon>
-                <p>High<br> {{day.temperatureMax}}</p>
+                <p>High<br> {{day.high.fahrenheit}}</p>
                 <p>Low<br> {{day.temperatureMin}}</p>
               </div>
             </div>  

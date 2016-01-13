@@ -68,8 +68,80 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                   console.log("weather ", weather.location.lat);
                   console.log("weather ", weather.location.lon);
                   console.log("first weather", weather);
+                  self.cityName = weather.location.city;
+                  console.log("self.cityName ", self.cityName);
 
-                  self.feels = weather.current_observation.feelslike_f;
+                  self.feels = Math.round(weather.current_observation.temp_f);
+
+                  //personal weather station id
+                  self.station = weather.current_observation.station_id;
+
+                  console.log("station ", self.station);
+
+              }).then(function(){
+                console.log("stuffy ", self.station);
+                // var stationObject = { "station" : self.station}
+                // localStorage.setItem("searchHistory", JSON.stringify(stationObject));
+                // "stationSearches":[
+                //       {"firstName":"John", "lastName":"Doe"}
+                //   ]
+
+                // for(var key in localStorage){
+                //   return key;
+                // }
+
+                //get stationHistory or set if not exist
+                console.log("station history ", localStorage.stationHistory);
+                if(localStorage.stationHistory !== undefined){
+                      
+                      //parse the stations in history
+                      var parsedStationArray = JSON.parse(localStorage.stationHistory);
+
+                      //if current station if not in array 
+                      if(parsedStationArray.indexOf(self.station) === -1){
+
+                            //push new item
+                            parsedStationArray.push(self.station);
+
+                            //stringify the new array
+                            var alteredArray = JSON.stringify(parsedStationArray);
+
+                            //set the new array in local storage
+                            localStorage.stationHistory = alteredArray;
+                        
+                      } else {
+                        console.log("already there");
+                      }
+
+
+
+                } else {
+                  //create local storage
+                  localStorage.setItem("stationHistory", "[]");
+
+                  
+                      //parse the stations in history
+                      var parsedStationArray = JSON.parse(localStorage.stationHistory);
+
+                      //if current station if not in array 
+                      if(parsedStationArray.indexOf(self.station) === -1){
+
+                            //push new item
+                            parsedStationArray.push(self.station);
+
+                            //stringify the new array
+                            var alteredArray = JSON.stringify(parsedStationArray);
+
+                            //set the new array in local storage
+                            localStorage.stationHistory = alteredArray;
+                        
+                      } else {
+                        console.log("already there");
+                      }
+
+
+
+                }
 
               });
 
@@ -93,7 +165,38 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                   console.log("weather ", weather.location.lon);
                   console.log("weather", weather);
 
-                  self.feels = weather.current_observation.feelslike_f;
+                  self.feels = Math.round(weather.current_observation.temp_f);
+                  self.cityName = weather.location.city;
+
+                  //personal weather station id
+                  self.station = weather.current_observation.station_id;
+                   if(localStorage.stationHistory !== undefined){
+                      
+                      //parse the stations in history
+                      var parsedStationArray = JSON.parse(localStorage.stationHistory);
+
+                      //if current station if not in array 
+                      if(parsedStationArray.indexOf(self.station) === -1){
+
+                            //push new item
+                            parsedStationArray.push(self.station);
+
+                            //stringify the new array
+                            var alteredArray = JSON.stringify(parsedStationArray);
+
+                            //set the new array in local storage
+                            localStorage.stationHistory = alteredArray;
+                        
+                      } else {
+                        console.log("already there");
+                      }
+
+
+
+                } else {
+                  //create local storage
+                  localStorage.setItem("stationHistory", "[]")
+                }
 
               });
 
@@ -116,7 +219,7 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                         //search underground by zip
                         $q(function(resolve, reject) {
                             //gets current weather data
-                          $http.get('http://api.wunderground.com/api/2f0c8e826c308010/geolookup/conditions/q/'+lat+','+lng+'.json')
+                          $http.get('http://api.wunderground.com/api/2f0c8e826c308010/geolookup/conditions/forecast/q/'+lat+','+lng+'.json')
                             .success(
                               function(weatherResponse) {
                                 resolve(weatherResponse);
@@ -132,9 +235,49 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                               console.log("weather ", weather.location.lon);
                               console.log("weather", weather);
 
-                              self.feels = weather.current_observation.feelslike_f;
+                              self.feels = Math.round(weather.current_observation.temp_f);
+                              self.cityName = weather.location.city;
 
                               self.gotGeo = true;
+
+                              var forcast = weather.forcast;
+                              var forecastArray = weather.forecast.simpleforecast.forecastday;
+
+                              console.log("forecastArray ", forecastArray);
+                              self.fiveDayForcast = forecastArray;
+                              console.log("far ", forecastArray[0].high.fahrenheit);
+
+                               //personal weather station id
+                  self.station = weather.current_observation.station_id;
+                   if(localStorage.stationHistory !== undefined){
+                      
+                      //parse the stations in history
+                      var parsedStationArray = JSON.parse(localStorage.stationHistory);
+
+                      //if current station if not in array 
+                      if(parsedStationArray.indexOf(self.station) === -1){
+
+                            //push new item
+                            parsedStationArray.push(self.station);
+
+                            //stringify the new array
+                            var alteredArray = JSON.stringify(parsedStationArray);
+
+                            //set the new array in local storage
+                            localStorage.stationHistory = alteredArray;
+                        
+                      } else {
+                        console.log("already there");
+                      }
+
+
+
+                } else {
+                  //create local storage
+                  localStorage.setItem("stationHistory", "[]")
+                }
+
+
 
                           });
 
@@ -148,7 +291,7 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
 
                      $q(function(resolve, reject) {
                             //gets current weather data
-                          $http.get('http://api.wunderground.com/api/2f0c8e826c308010/geolookup/conditions/q/'+newZip+'.json')
+                          $http.get('http://api.wunderground.com/api/2f0c8e826c308010/geolookup/conditions/forecast/q/'+newZip+'.json')
                             .success(
                               function(weatherResponse) {
                                 resolve(weatherResponse);
@@ -164,7 +307,41 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                               console.log("weather ", weather.location.lon);
                               console.log("weather", weather);
 
-                              self.feels = weather.current_observation.feelslike_f;
+                              self.feels = Math.round(weather.current_observation.temp_f);
+                              self.cityName = weather.location.city;
+                               var stationObject = { "station" : self.station}
+                               console.log("stationObject", stationObject);
+
+                                //personal weather station id
+                  self.station = weather.current_observation.station_id;
+                   if(localStorage.stationHistory !== undefined){
+                      
+                      //parse the stations in history
+                      var parsedStationArray = JSON.parse(localStorage.stationHistory);
+
+                      //if current station if not in array 
+                      if(parsedStationArray.indexOf(self.station) === -1){
+
+                            //push new item
+                            parsedStationArray.push(self.station);
+
+                            //stringify the new array
+                            var alteredArray = JSON.stringify(parsedStationArray);
+
+                            //set the new array in local storage
+                            localStorage.stationHistory = alteredArray;
+                        
+                      } else {
+                        console.log("already there");
+                      }
+
+
+
+                } else {
+                  //create local storage
+                  localStorage.setItem("stationHistory", "[]")
+                }
+
 
                           });
                   }
