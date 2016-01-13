@@ -1,17 +1,15 @@
-<ion-view>
+<ion-view ng-controller="weatherCtrl as weather">
 <ion-nav-title>
-  Weather
+   <label class="item item-input">
+    <i class="icon ion-search placeholder-icon"></i>
+    <input type="text" placeholder="Search by Zip Code" ng-model="newZip" ng-keypress="weather.searchForZip($event, newZip)">
+  </label>
 </ion-nav-title>
 
 
-    <div id="mainView" ng-controller="weatherCtrl as weather">
-    <label class="item item-input">
-          <input type="text" ng-model="zipInput" ng-keypress="weather.switchZip($event, zipInput)" placeholder="Zip Code">
-        </label>
+    <div id="mainView">
         <skycon icon="weather.CurrentWeather.forecast.icon" size="weather.CurrentWeather.forecast.iconSize"></skycon>
-        <h1 id="noMargHeader">{{weather.weatherDesc}}</h1>
-        <h1>{{weather.temp}}</h1>
-        <h3>{{weather.feelsLike}}</h3>
+        <h1 id="noMargHeader">Feels like: {{weather.feels}}</h1>
         
 <p>{{weather.longSummary}}</p>
           <div id="three-day-forcast-holder"> 

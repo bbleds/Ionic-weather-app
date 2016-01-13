@@ -49,101 +49,11 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
 
     self.color = "blue";
 
-     //enter zip
-          self.switchZip = function($event, zipInput){
-            if($event.keyCode === 13){
-              
-              //take zip and get lat and lng from google
-                 $q(function(resolve, reject) {
-                  $http.get('http://maps.googleapis.com/maps/api/geocode/json?address='+zipInput+'&country=us')
-                  .success(
-                    function(addressResponse) {
-                      resolve(addressResponse);
-
-                    }, function(error) {
-                      reject(error);
-                    }
-                  );
-
-                  //promise resolves address
-                }).then(function(zipAddress){
-                  console.log("zipAddress", zipAddress.results[0].geometry.location);
-
-                  var newLat = zipAddress.results[0].geometry.location.lat;
-                  var newLng = zipAddress.results[0].geometry.location.lng;
-
-                    $q(function(resolve, reject) {
-                //gets current weather data
-              $http.get('/api/forecast/deddf761abe49ca199f649859b49fc32/'+newLat+','+newLng)
-                .success(
-                  function(weatherResponse) {
-                    resolve(weatherResponse);
-
-                  }, function(error) {
-                    console.log("there was an error");
-                    reject(error);
-                  }
-                );
-              }).then(function(weather){
-                 console.log(" weather ", weather);
-
-                //Holds a summary of week Forcast
-                self.longSummary = weather.daily.summary;
-
-                //Holds current temperature returned from API
-                self.temp = Math.round(weather.currently.temperature)+"°";
-
-                //Holds a description of weather returned from  API
-                self.weatherDesc = weather.currently.summary;
-
-                //Holds current weather icon from API
-                self.CurrentWeather = {
-                    forecast: {
-                        icon: weather.currently.icon,
-                        iconSize: 150,
-                        color: self.color
-                    }
-                };
-
-                //Holds what current temp feels like
-                self.feelsLike = "Feels like "+Math.round(weather.currently.apparentTemperature)+"°";
-
-               //Loop through first five days of forcast returned from API and push to self.fiveDayForcast array
-               self.fiveDayForcast = []
-               for(var i = 1; i < 6; i++){
-
-                  //round max temperature to nearest degree
-                  weather.daily.data[i].temperatureMax = Math.round(weather.daily.data[i].temperatureMax);
-
-                  //round min temperature to nearest degree
-                  weather.daily.data[i].temperatureMin = Math.round(weather.daily.data[i].temperatureMin);
-                    self.fiveDayForcast.push(weather.daily.data[i])
-               };
-               console.log("self.fiveDayForcast", self.fiveDayForcast);
-
-
-
-
-              })
-
-
-
-                });
-            }
-
-          }
-
-           var posOptions = {timeout: 10000, enableHighAccuracy: false};
-          $cordovaGeolocation
-            .getCurrentPosition(posOptions)
-            .then(function (position) {
-            //gets lat and lng
-              var lat  = position.coords.latitude
-              var lng = position.coords.longitude
-              //query the forcast api by lat and lng         
+     //make api call for auto ip, then location 
+              //query the weather underground api by lat and lng to get auto ip first, then html 5 location 
               $q(function(resolve, reject) {
                 //gets current weather data
-              $http.get('/api/forecast/deddf761abe49ca199f649859b49fc32/'+lat+','+lng)
+              $http.get('http://api.wunderground.com/api/2f0c8e826c308010/conditions/forecast/geolookup/q/autoip.json')
                 .success(
                   function(weatherResponse) {
                     resolve(weatherResponse);
@@ -154,48 +64,117 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                   }
                 );
               }).then(function(weather){
-                console.log(" weather ", weather);
+                  //get lat and long
+                  console.log("weather ", weather.location.lat);
+                  console.log("weather ", weather.location.lon);
+                  console.log("first weather", weather);
 
-                //Holds a summary of week Forcast
-                self.longSummary = weather.daily.summary;
-
-                //Holds current temperature returned from API
-                self.temp = Math.round(weather.currently.temperature)+"°";
-
-                //Holds a description of weather returned from  API
-                self.weatherDesc = weather.currently.summary;
-
-                //Holds current weather icon from API
-                self.CurrentWeather = {
-                    forecast: {
-                        icon: weather.currently.icon,
-                        iconSize: 150,
-                        color: self.color
-                    }
-                };
-
-                //Holds what current temp feels like
-                self.feelsLike = "Feels like "+Math.round(weather.currently.apparentTemperature)+"°";
-
-               //Loop through first five days of forcast returned from API and push to self.fiveDayForcast array
-               self.fiveDayForcast = []
-               for(var i = 1; i < 6; i++){
-
-                  //round max temperature to nearest degree
-                  weather.daily.data[i].temperatureMax = Math.round(weather.daily.data[i].temperatureMax);
-
-                  //round min temperature to nearest degree
-                  weather.daily.data[i].temperatureMin = Math.round(weather.daily.data[i].temperatureMin);
-                    self.fiveDayForcast.push(weather.daily.data[i])
-               };
-               console.log("self.fiveDayForcast", self.fiveDayForcast);
+                  self.feels = weather.current_observation.feelslike_f;
 
               });
 
-                }, function(err) {
-                  console.log("there was an error");
-                  // error
-                });
+        //******** AUTO IP CALL **********//
+               //query the weather underground api by lat and lng to get auto ip first, then html 5 location 
+              $q(function(resolve, reject) {
+                //gets current weather data
+              $http.get('http://api.wunderground.com/api/2f0c8e826c308010/conditions/forecast/geolookup/q/autoip.json')
+                .success(
+                  function(weatherResponse) {
+                    resolve(weatherResponse);
+
+                  }, function(error) {
+                    console.log("there was an error");
+                    reject(error);
+                  }
+                );
+              }).then(function(weather){
+                  //get lat and long
+                  console.log("weather ", weather.location.lat);
+                  console.log("weather ", weather.location.lon);
+                  console.log("weather", weather);
+
+                  self.feels = weather.current_observation.feelslike_f;
+
+              });
+
+    //******** HTML 5 CALL **********//
+               $q(function(resolve, reject) {
+                        //gets current weather data
+                         navigator.geolocation.getCurrentPosition(function(data){                           
+
+                           resolve(data);
+                        });
+                  
+                      }).then(function(data){
+                          //get lat and long
+                        console.log("data ", data);
+                        var lat = data.coords.latitude;
+                        var lng = data.coords.longitude;
+                        console.log("latitude ", lat);
+                        console.log("longitude", lng);
+
+                        //search underground by zip
+                        $q(function(resolve, reject) {
+                            //gets current weather data
+                          $http.get('http://api.wunderground.com/api/2f0c8e826c308010/geolookup/conditions/q/'+lat+','+lng+'.json')
+                            .success(
+                              function(weatherResponse) {
+                                resolve(weatherResponse);
+
+                              }, function(error) {
+                                console.log("there was an error");
+                                reject(error);
+                              }
+                            );
+                          }).then(function(weather){
+                              //get lat and long
+                              console.log("weather ", weather.location.lat);
+                              console.log("weather ", weather.location.lon);
+                              console.log("weather", weather);
+
+                              self.feels = weather.current_observation.feelslike_f;
+
+                              self.gotGeo = true;
+
+                          });
+
+                      });
+
+                self.searchForZip = function($event, newZip){
+
+                  if($event.keyCode === 13 && self.gotGeo === true){
+                      console.log("newZip ", newZip);
+            
+
+                     $q(function(resolve, reject) {
+                            //gets current weather data
+                          $http.get('http://api.wunderground.com/api/2f0c8e826c308010/geolookup/conditions/q/'+newZip+'.json')
+                            .success(
+                              function(weatherResponse) {
+                                resolve(weatherResponse);
+
+                              }, function(error) {
+                                console.log("there was an error");
+                                reject(error);
+                              }
+                            );
+                          }).then(function(weather){
+                              //get lat and long
+                              console.log("weather ", weather.location.lat);
+                              console.log("weather ", weather.location.lon);
+                              console.log("weather", weather);
+
+                              self.feels = weather.current_observation.feelslike_f;
+
+                          });
+                  }
+                      
+                }
+
+              //get a search box before lunch that searches by zip
+
+
+      
 
 
 });
