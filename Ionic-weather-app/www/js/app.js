@@ -49,11 +49,12 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
 
     self.color = "blue";
 
-    //main function
-    function getWeather(url){
+    //functions
+    function getWeather(urlParams){
+
        $q(function(resolve, reject) {
                 //gets current weather data
-              $http.get(url)
+              $http.get('http://api.wunderground.com/api/2f0c8e826c308010/conditions/forecast10day/geolookup/q/'+urlParams)
                 .success(
                   function(weatherResponse) {
                     resolve(weatherResponse);
@@ -69,6 +70,13 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                   self.cityName = weather.location.city +", "+ weather.location.state;
                   //personal weather station id
                   self.station = weather.current_observation.station_id;
+
+                  //Current weather state
+                  self.currentWeather = weather.current_observation.weather;
+
+                  //Current weather icon
+                  self.currentWeatherIcon = weather.current_observation.icon_url;
+
                   //get search history
                   var searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || {};
                   //set key
@@ -76,22 +84,36 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                   //add to local storage
                   localStorage.searchHistory = JSON.stringify(searchHistory);
 
-                  //outputtodom
+                  //output search history to DOM
                   self.searchOutput = searchHistory;
 
                   // set forcast output array
-                  var forecastArray = weather.forecast.simpleforecast.forecastday;
+                  var forecastArray = [];
+                  for(var i = 1; i < 6; i++){
+                    forecastArray.push(weather.forecast.simpleforecast.forecastday[i]);
+                  }
+                  //save forcast
                   self.fiveDayForcast = forecastArray;
+
+                  //save current state
+
+                  console.log("weather ", weather);
                   
                 
 
               });
+                
+              //load a previous weather request
+                self.findPrev = function(value){
+                  console.log("value ", value);
+                  getWeather('pws:'+value+'.json');
+                }
 
     }
 
         //******** AUTO IP CALL **********//
                //query the weather underground api by lat and lng to get auto ip first, then html 5 location 
-              getWeather('http://api.wunderground.com/api/2f0c8e826c308010/conditions/forecast/geolookup/q/autoip.json');
+              getWeather('autoip.json');
 
       //******** HTML 5 CALL **********//
                $q(function(resolve, reject) {
@@ -108,7 +130,7 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                         var lng = data.coords.longitude;
                         console.log("latitude ", lat);
                         console.log("longitude", lng);
-                        getWeather('http://api.wunderground.com/api/2f0c8e826c308010/geolookup/conditions/forecast/q/'+lat+','+lng+'.json');
+                        getWeather(lat+','+lng+'.json');
                         self.gotGeo = true;
                       });
 
@@ -117,7 +139,7 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
 
                   if($event.keyCode === 13 && self.gotGeo === true){
                       console.log("newZip ", newZip);
-                       getWeather('http://api.wunderground.com/api/2f0c8e826c308010/geolookup/conditions/forecast/q/'+newZip+'.json');
+                       getWeather(newZip+'.json');
             
                   }
                       

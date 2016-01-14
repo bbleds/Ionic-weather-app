@@ -7,12 +7,13 @@
 </ion-nav-title>
 
 
-    <div id="mainView">
-        <skycon icon="weather.CurrentWeather.forecast.icon" size="weather.CurrentWeather.forecast.iconSize"></skycon>
+    <div id="mainView">        
         <h1 id="noMargHeader">{{weather.cityName}}</h1>
-        <h1 id="noMargHeader">{{weather.feels}}°</h1>
+        <h3 id="noMargHeader">{{weather.currentWeather}}</h3>
+        <img src="{{weather.currentWeatherIcon}}"/>
+        <h3 id="noMargHeader">{{weather.feels}}°</h3>
         <p>Search History</p>
-        <p ng-repeat="(key,value) in weather.searchOutput">
+        <p ng-repeat="(key,value) in weather.searchOutput | limitTo: 5" ng-click="weather.findPrev(value)">
           {{key}}
         </p>
         
@@ -23,9 +24,11 @@
              </div>
             <div id="five-day-forcast" class="row">
               <div class="col card" ng-repeat="day in weather.fiveDayForcast">                
-                <skycon icon="day.icon" size="50"></skycon>
+                <!-- <skycon icon="day.icon" size="50"></skycon> -->
+                <p>{{day.date.weekday_short}}</p>
+                <img src="{{day.icon_url}}">
                 <p>High<br> {{day.high.fahrenheit}}</p>
-                <p>Low<br> {{day.temperatureMin}}</p>
+                <p>Low<br> {{day.low.fahrenheit}}</p>
               </div>
             </div>  
           </div>  

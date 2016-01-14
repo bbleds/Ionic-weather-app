@@ -1,10 +1,18 @@
 {
   "name": "Ionic-weather-app",
   "app_id": "",
- "proxies": [
-     {
-         "path": "/api",
-         "proxyUrl": "https://api.forecast.io"
-     }
- ]
+  "proxies": [
+    {
+      "path": "/api",
+      "proxyUrl": "https://api.forecast.io"
+    }
+  ],
+  "gulpStartupTasks": [
+    "sass",
+    "watch"
+  ],
+  "watchPatterns": [
+    "www/**/*",
+    "!www/lib/**/*"
+  ]
 }
