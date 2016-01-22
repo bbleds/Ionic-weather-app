@@ -1,4 +1,4 @@
-// Ionic Starter App 
+// Ionic Starter App
 
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
@@ -8,13 +8,7 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {
-      // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-      // for form inputs)
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-
-      // Don't remove this line unless you know what you are doing. It stops the viewport
-      // from snapping when text inputs are focused. Ionic handles this internally for
-      // a much nicer keyboard experience.
       cordova.plugins.Keyboard.disableScroll(true);
     }
     if(window.StatusBar) {
@@ -32,28 +26,24 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
   // setup an abstract state for the tabs directive
     .state('main', {
     url: '/main',
-    templateUrl: 'templates/main.html'        
+    templateUrl: 'templates/main.html'
     })
 
     // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('main');
+    $urlRouterProvider.otherwise('main');
 
 
 })
 
 //handles request to weather api
-.controller('weatherCtrl', function( $q, $http, $cordovaGeolocation){ 
-
-
+.controller('weatherCtrl', function( $q, $http, $cordovaGeolocation){
     var self = this;
 
-    self.color = "blue";
-
-     //enter zip
+     //enter zip or city name
           self.switchZip = function($event, zipInput){
             if($event.keyCode === 13){
-              
-              //take zip and get lat and lng from google
+
+              //take zip and get lat and lng from google maps api
                  $q(function(resolve, reject) {
                   $http.get('http://maps.googleapis.com/maps/api/geocode/json?address='+zipInput+'&country=us')
                   .success(
@@ -73,7 +63,7 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                   var newLng = zipAddress.results[0].geometry.location.lng;
 
                     $q(function(resolve, reject) {
-                //gets current weather data
+                //gets current weather data from forcast.io api
               $http.get('/api/forecast/deddf761abe49ca199f649859b49fc32/'+newLat+','+newLng)
                 .success(
                   function(weatherResponse) {
@@ -120,27 +110,40 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                     self.fiveDayForcast.push(weather.daily.data[i])
                };
                console.log("self.fiveDayForcast", self.fiveDayForcast);
-
-
-
-
               })
-
-
-
                 });
             }
+      }
 
-          }
-
-           var posOptions = {timeout: 10000, enableHighAccuracy: false};
+      //Main functionality, runs immediately
+          var posOptions = {timeout: 10000, enableHighAccuracy: false};
           $cordovaGeolocation
             .getCurrentPosition(posOptions)
             .then(function (position) {
             //gets lat and lng
               var lat  = position.coords.latitude
               var lng = position.coords.longitude
-              //query the forcast api by lat and lng         
+              console.log("position", position)
+
+              //query google maps api for city name from the lat and lng
+                    $q(function(resolve, reject) {
+                  //gets current city data
+                  $http.get("http://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+lng)
+                    .success(
+                      function(cityResponse) {
+                        resolve(cityResponse);
+
+                      }, function(error) {
+                        console.log("there was an error");
+                        reject(error);
+                      }
+                    );
+                  }).then(function(returnCityData){
+                      console.log("returnedCIty stuff", returnCityData);
+                  })
+
+
+              //query the forcast api by lat and lng
               $q(function(resolve, reject) {
                 //gets current weather data
               $http.get('/api/forecast/deddf761abe49ca199f649859b49fc32/'+lat+','+lng)
@@ -154,6 +157,7 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                   }
                 );
               }).then(function(weather){
+
                 console.log(" weather ", weather);
 
                 //Holds a summary of week Forcast
