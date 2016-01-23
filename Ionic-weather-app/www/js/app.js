@@ -39,6 +39,27 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
 .controller('weatherCtrl', function( $q, $http, $cordovaGeolocation){
     var self = this;
 
+      //function get current city name for weather
+        function getCity(lat, lng){
+              //query google maps api for city name from the lat and lng
+                  $q(function(resolve, reject) {
+                  //gets current city data
+                  $http.get("http://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+lng)
+                    .success(
+                      function(cityResponse) {
+                        resolve(cityResponse);
+
+                      }, function(error) {
+                        console.log("there was an error");
+                        reject(error);
+                      }
+                    );
+                  }).then(function(returnCityData){
+                      self.cityState = returnCityData.results[0].formatted_address.split(",").splice(1).join(", ");
+                  })
+        }
+
+
      //enter zip or city name
           self.switchZip = function($event, zipInput){
             if($event.keyCode === 13){
@@ -61,6 +82,9 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
 
                   var newLat = zipAddress.results[0].geometry.location.lat;
                   var newLng = zipAddress.results[0].geometry.location.lng;
+
+                    //get current city and set to self.cityState
+                    getCity(newLat, newLng);
 
                     $q(function(resolve, reject) {
                 //gets current weather data from forcast.io api
@@ -125,26 +149,9 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
               var lng = position.coords.longitude
               console.log("position", position)
 
-              //query google maps api for city name from the lat and lng
-                    $q(function(resolve, reject) {
-                  //gets current city data
-                  $http.get("http://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+lng)
-                    .success(
-                      function(cityResponse) {
-                        resolve(cityResponse);
+              //get current city and set to self.cityState
+              getCity(lat, lng);
 
-                      }, function(error) {
-                        console.log("there was an error");
-                        reject(error);
-                      }
-                    );
-                  }).then(function(returnCityData){
-                      var city = returnCityData.results[0].address_components[2].long_name;
-                      var state = returnCityData.results[0].address_components[4].long_name;
-                      console.log("citystate "+ city + ", "+state)
-
-                      self.cityState = city + ", "+state;
-                  })
 
 
               //query the forcast api by lat and lng

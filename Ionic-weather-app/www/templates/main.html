@@ -1,12 +1,13 @@
-<ion-view>
+<ion-view ng-controller="weatherCtrl as weather">
     <ion-nav-title>
     <label class="item item-input">
-       <input type="text" ng-model="zipInput" ng-keypress="weather.switchZip($event, zipInput)" placeholder="Zip Code">
+    <i class="icon ion-search placeholder-icon"></i>
+       <input type="text" ng-model="zipInput" ng-keypress="weather.switchZip($event, zipInput)" placeholder="Search by zipcode or city name!">
        </label>
     </ion-nav-title>
 
 
-    <div id="mainView" ng-controller="weatherCtrl as weather">
+    <div id="mainView">
     <!-- <label class="item item-input"> -->
          <!--  <input type="text" ng-model="zipInput" ng-keypress="weather.switchZip($event, zipInput)" placeholder="Zip Code"> -->
         <!-- </label> -->
