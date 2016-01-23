@@ -1,31 +1,36 @@
-<ion-view>
-<ion-nav-title>
-  Weather
-</ion-nav-title>
-
-
-    <div id="mainView" ng-controller="weatherCtrl as weather">
+<ion-view ng-controller="weatherCtrl as weather">
+    <ion-nav-title>
     <label class="item item-input">
-          <input type="text" ng-model="zipInput" ng-keypress="weather.switchZip($event, zipInput)" placeholder="Zip Code">
-        </label>
+    <i class="icon ion-search placeholder-icon"></i>
+       <input type="text" ng-model="zipInput" ng-keypress="weather.switchZip($event, zipInput)" placeholder="Search by zipcode or city name!">
+       </label>
+    </ion-nav-title>
+
+
+    <div id="mainView">
+    <!-- <label class="item item-input"> -->
+         <!--  <input type="text" ng-model="zipInput" ng-keypress="weather.switchZip($event, zipInput)" placeholder="Zip Code"> -->
+        <!-- </label> -->
+          <h1>{{weather.cityState}}</h1>
         <skycon icon="weather.CurrentWeather.forecast.icon" size="weather.CurrentWeather.forecast.iconSize"></skycon>
-        <h1 id="noMargHeader">{{weather.weatherDesc}}</h1>
         <h1>{{weather.temp}}</h1>
+        <h1 id="noMargHeader">{{weather.weatherDesc}}</h1>
         <h3>{{weather.feelsLike}}</h3>
-        
+
 <p>{{weather.longSummary}}</p>
-          <div id="three-day-forcast-holder"> 
+          <div id="three-day-forcast-holder">
              <div class="item item-divider bar-calm">
                 5 Day Forcast
              </div>
             <div id="five-day-forcast" class="row">
-              <div class="col card" ng-repeat="day in weather.fiveDayForcast">                
+              <div class="col card" ng-repeat="day in weather.fiveDayForcast">
+                <p>{{weather.nextFiveDayArray[$index]}}</p>
                 <skycon icon="day.icon" size="50"></skycon>
                 <p>High<br> {{day.temperatureMax}}</p>
                 <p>Low<br> {{day.temperatureMin}}</p>
               </div>
-            </div>  
-          </div>  
+            </div>
+          </div>
 
     </div>
 
