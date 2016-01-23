@@ -139,7 +139,11 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                       }
                     );
                   }).then(function(returnCityData){
-                      console.log("returnedCIty stuff", returnCityData);
+                      var city = returnCityData.results[0].address_components[2].long_name;
+                      var state = returnCityData.results[0].address_components[4].long_name;
+                      console.log("citystate "+ city + ", "+state)
+
+                      self.cityState = city + ", "+state;
                   })
 
 
