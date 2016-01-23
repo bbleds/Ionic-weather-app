@@ -24,6 +24,7 @@
              </div>
             <div id="five-day-forcast" class="row">
               <div class="col card" ng-repeat="day in weather.fiveDayForcast">
+                <p>{{weather.nextFiveDayArray[$index]}}</p>
                 <skycon icon="day.icon" size="50"></skycon>
                 <p>High<br> {{day.temperatureMax}}</p>
                 <p>Low<br> {{day.temperatureMin}}</p>

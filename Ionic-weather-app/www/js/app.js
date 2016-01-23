@@ -39,6 +39,32 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
 .controller('weatherCtrl', function( $q, $http, $cordovaGeolocation){
     var self = this;
 
+      //function to get the day names for the next five days
+      var getSelfDays = () => {
+
+        var myDate = new Date().getDay();
+        var days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
+          var resetWeek = 0;
+          var fiveDayArray =[];
+          for(var count = 1; count < 6; count++){
+             if (myDate+count > 6){
+               fiveDayArray.push(days[resetWeek]);
+               resetWeek++;
+             } else {
+              fiveDayArray.push(days[myDate+count]);
+             }
+          }
+
+          self.nextFiveDayArray = fiveDayArray;
+
+          console.log("next five day array ", self.nextFiveDayArray)
+
+      }
+
+      getSelfDays()
+
+
+
       //function get current city name for weather
         function getCity(lat, lng){
               //query google maps api for city name from the lat and lng
