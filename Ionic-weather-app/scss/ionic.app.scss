@@ -21,3 +21,43 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
+#mainCityOutput{
+  margin-top: 75px;
+}
+
+
+@media screen and (max-width: 760px){
+  .pDesc{
+    display: none;
+  }
+
+
+}
+
+@media screen and (max-width: 400px){
+
+    #mainCityOutput{
+      font-size: 1.5rem;
+      margin-top: 55px;
+    }
+
+    .feelDesc, .sumDesc{
+      display: none;
+    }
+
+
+}
+
+@media screen and (max-width: 321px){
+
+    #mainCityOutput{
+      font-size: 1.2rem;
+      margin-top: 55px;
+    }
+
+    .feelDesc, .sumDesc, #noMargHeader{
+      display: none;
+    }
+
+
+}

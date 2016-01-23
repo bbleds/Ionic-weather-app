@@ -11,13 +11,13 @@
     <!-- <label class="item item-input"> -->
          <!--  <input type="text" ng-model="zipInput" ng-keypress="weather.switchZip($event, zipInput)" placeholder="Zip Code"> -->
         <!-- </label> -->
-          <h1>{{weather.cityState}}</h1>
+          <h1 id="mainCityOutput">{{weather.cityState}}</h1>
         <skycon icon="weather.CurrentWeather.forecast.icon" size="weather.CurrentWeather.forecast.iconSize"></skycon>
         <h1>{{weather.temp}}</h1>
+        <h3 class="feelDesc">{{weather.feelsLike}}</h3>
         <h1 id="noMargHeader">{{weather.weatherDesc}}</h1>
-        <h3>{{weather.feelsLike}}</h3>
 
-<p>{{weather.longSummary}}</p>
+          <p class="sumDesc">{{weather.longSummary}}</p>
           <div id="three-day-forcast-holder">
              <div class="item item-divider bar-calm">
                 5 Day Forcast
@@ -26,7 +26,8 @@
               <div class="col card" ng-repeat="day in weather.fiveDayForcast">
                 <p>{{weather.nextFiveDayArray[$index]}}</p>
                 <skycon icon="day.icon" size="50"></skycon>
-                <p>{{day.summary}}</p>
+                <p class="pDesc">{{day.summary}}</p>
+                <div>
                 <p>High<br> {{day.temperatureMax}}</p>
                 <p>Low<br> {{day.temperatureMin}}</p>
               </div>
