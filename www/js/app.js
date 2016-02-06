@@ -32,7 +32,7 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
     self.contentLoaded = false;
 
       //function to get the day names for the next five days
-      var getSelfDays = () => {
+      var getSelfDays = function() {
 
         var myDate = new Date().getDay();
         var days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
