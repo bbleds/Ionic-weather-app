@@ -1,2 +1,4 @@
 # Ionic-weather-app
-A weather app created using the Ionic framework
+A weather app created using AngularJs, Node, Express, and the Ionic Framework
+
+# Purpose
