@@ -137,6 +137,8 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                     }
                 };
 
+                self.contentLoaded = true;
+
                 //Holds what current temp feels like
                 self.feelsLike = "Feels like "+Math.round(weather.currently.apparentTemperature)+"°";
 
