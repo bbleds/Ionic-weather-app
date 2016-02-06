@@ -15,7 +15,7 @@ If you want to run this app locally/get it on your machine -
     ```
     npm install
     ```
-  4. Run express server, and you're done! - 
+  4. Run express server, and you're done! (after running, go to localhost:5000 in your browser to view) - 
     ```
     npm start 
     ```
