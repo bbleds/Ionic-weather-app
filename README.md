@@ -2,7 +2,7 @@
 A weather app created using AngularJs, Node, Express, and the Ionic Framework.
 
 ### Purpose
-
+I created this app during my apprenticeship at [Nashville Software School](http://nashvillesoftwareschool.com/)
 
 ### Local Use
 If you want to run this app locally/get it on your machine -
