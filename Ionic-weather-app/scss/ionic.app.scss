@@ -28,6 +28,15 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
+
+.spinner svg{
+   width: 250px;
+  height: 250px;
+  margin-top: 120px;
+  stroke: white;
+  fill: white;
+}
+
 #DirectOutput{
   top: 40px;
   width: 480px;

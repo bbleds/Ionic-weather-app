@@ -38,6 +38,7 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
 //handles request to weather api
 .controller('weatherCtrl', function( $q, $http, $cordovaGeolocation){
     var self = this;
+    self.contentLoaded = false;
 
       //function to get the day names for the next five days
       var getSelfDays = () => {
@@ -214,6 +215,8 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                         color: "#f1c40f"
                     }
                 };
+
+                self.contentLoaded = true;
 
                 //Holds what current temp feels like
                 self.feelsLike = "Feels like "+Math.round(weather.currently.apparentTemperature)+"°";
