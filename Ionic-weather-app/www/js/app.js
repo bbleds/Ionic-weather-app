@@ -140,8 +140,8 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                 self.CurrentWeather = {
                     forecast: {
                         icon: weather.currently.icon,
-                        iconSize: 150,
-                        color: self.color
+                        iconSize: 75,
+                        color: "#f1c40f"
                     }
                 };
 
@@ -210,8 +210,8 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                 self.CurrentWeather = {
                     forecast: {
                         icon: weather.currently.icon,
-                        iconSize: 150,
-                        color: self.color
+                        iconSize: 75,
+                        color: "#f1c40f"
                     }
                 };
 

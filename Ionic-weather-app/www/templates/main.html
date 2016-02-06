@@ -1,4 +1,4 @@
-<ion-view ng-controller="weatherCtrl as weather">
+<ion-view id="main-con-holr" ng-controller="weatherCtrl as weather">
     <ion-nav-title>
     <label class="item item-input">
     <i class="icon ion-search placeholder-icon"></i>
@@ -6,30 +6,28 @@
        </label>
     </ion-nav-title>
 
+    <div id="mainOverlay"></div>
 
     <div id="mainView">
     <!-- <label class="item item-input"> -->
          <!--  <input type="text" ng-model="zipInput" ng-keypress="weather.switchZip($event, zipInput)" placeholder="Zip Code"> -->
         <!-- </label> -->
           <h1 id="mainCityOutput">{{weather.cityState}}</h1>
-        <skycon icon="weather.CurrentWeather.forecast.icon" size="weather.CurrentWeather.forecast.iconSize"></skycon>
-        <h1>{{weather.temp}}</h1>
-        <h3 class="feelDesc">{{weather.feelsLike}}</h3>
-        <h1 id="noMargHeader">{{weather.weatherDesc}}</h1>
+        <div id="DirectOutput">
 
-          <p class="sumDesc">{{weather.longSummary}}</p>
+          <skycon id="mainSkycon" icon="weather.CurrentWeather.forecast.icon" size="weather.CurrentWeather.forecast.iconSize" color="weather.CurrentWeather.forecast.color"></skycon>
+          <h1 id="tempOut">{{weather.temp}}</h1>
+          <h1 id="noMargHeader">{{weather.weatherDesc}}</h1>
+        </div>
+
           <div id="three-day-forcast-holder">
-             <div class="item item-divider bar-calm">
-                5 Day Forcast
-             </div>
             <div id="five-day-forcast" class="row">
               <div class="col card" ng-repeat="day in weather.fiveDayForcast">
                 <p>{{weather.nextFiveDayArray[$index]}}</p>
-                <skycon icon="day.icon" size="50"></skycon>
+                <skycon icon="day.icon" size="25" color="weather.CurrentWeather.forecast.color"></skycon>
                 <p class="pDesc">{{day.summary}}</p>
                 <div>
-                <p>High<br> {{day.temperatureMax}}</p>
-                <p>Low<br> {{day.temperatureMin}}</p>
+                <p>{{day.temperatureMax}}° / {{day.temperatureMin}}°</p>
               </div>
             </div>
           </div>
