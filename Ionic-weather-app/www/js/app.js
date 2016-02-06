@@ -58,7 +58,7 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
 
           self.nextFiveDayArray = fiveDayArray;
 
-          console.log("next five day array ", self.nextFiveDayArray)
+          // console.log("next five day array ", self.nextFiveDayArray)
 
       }
 
@@ -77,7 +77,7 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                         resolve(cityResponse);
 
                       }, function(error) {
-                        console.log("there was an error");
+                        // console.log("there was an error");
                         reject(error);
                       }
                     );
@@ -105,7 +105,7 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
 
                   //promise resolves address
                 }).then(function(zipAddress){
-                  console.log("zipAddress", zipAddress.results[0].geometry.location);
+                  // console.log("zipAddress", zipAddress.results[0].geometry.location);
 
                   var newLat = zipAddress.results[0].geometry.location.lat;
                   var newLng = zipAddress.results[0].geometry.location.lng;
@@ -121,12 +121,12 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                     resolve(weatherResponse);
 
                   }, function(error) {
-                    console.log("there was an error");
+                    // console.log("there was an error");
                     reject(error);
                   }
                 );
               }).then(function(weather){
-                 console.log(" weather ", weather);
+                 // console.log(" weather ", weather);
 
                 //Holds a summary of week Forcast
                 self.longSummary = weather.daily.summary;
@@ -160,7 +160,7 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                   weather.daily.data[i].temperatureMin = Math.round(weather.daily.data[i].temperatureMin);
                     self.fiveDayForcast.push(weather.daily.data[i])
                };
-               console.log("self.fiveDayForcast", self.fiveDayForcast);
+               // console.log("self.fiveDayForcast", self.fiveDayForcast);
               })
                 });
             }
@@ -174,7 +174,7 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
             //gets lat and lng
               var lat  = position.coords.latitude
               var lng = position.coords.longitude
-              console.log("position", position)
+              // console.log("position", position)
 
               //get current city and set to self.cityState
               getCity(lat, lng);
@@ -190,13 +190,13 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                     resolve(weatherResponse);
 
                   }, function(error) {
-                    console.log("there was an error");
+                    // console.log("there was an error");
                     reject(error);
                   }
                 );
               }).then(function(weather){
 
-                console.log(" weather ", weather);
+                // console.log(" weather ", weather);
 
                 //Holds a summary of week Forcast
                 self.longSummary = weather.daily.summary;
@@ -232,12 +232,12 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
                   weather.daily.data[i].temperatureMin = Math.round(weather.daily.data[i].temperatureMin);
                     self.fiveDayForcast.push(weather.daily.data[i])
                };
-               console.log("self.fiveDayForcast", self.fiveDayForcast);
+               // console.log("self.fiveDayForcast", self.fiveDayForcast);
 
               });
 
                 }, function(err) {
-                  console.log("there was an error");
+                  // console.log("there was an error");
                   // error
                 });
 
