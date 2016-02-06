@@ -106,7 +106,7 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
 
                     $q(function(resolve, reject) {
                 //gets current weather data from forcast.io api
-              $http.get('/api/forecast/deddf761abe49ca199f649859b49fc32/'+newLat+','+newLng)
+              $http.get('/api/'+newLat+"/"+newLng)
                 .success(
                   function(weatherResponse) {
                     resolve(weatherResponse);
@@ -175,7 +175,7 @@ angular.module('weatherApp', ['ionic', 'ngCordova', 'angular-skycons'])
               //query the forcast api by lat and lng
               $q(function(resolve, reject) {
                 //gets current weather data
-              $http.get('/api/forecast/deddf761abe49ca199f649859b49fc32/'+lat+','+lng)
+                $http.get('/api/'+lat+"/"+lng)
                 .success(
                   function(weatherResponse) {
                     resolve(weatherResponse);
