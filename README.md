@@ -1,5 +1,5 @@
 # WeatherB 
-A weather app created using AngularJs, Node, Express, and the Ionic Framework.
+A weather app built with AngularJs, Node, Express, and the Ionic Framework.
 
 ### Purpose
 This app was a short project I created during my apprenticeship at [Nashville Software School](http://nashvillesoftwareschool.com/) in order to get a better understandng of the Express, Angular, Node and Ionic.
